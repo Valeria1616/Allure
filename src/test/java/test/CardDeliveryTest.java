@@ -72,4 +72,18 @@ void shouldSuccessfulPlanAndPlanMeeting() {
             .shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate))
             .shouldBe(visible);
     }
+
+@Test
+@DisplayName("Should get error message if entered wrong phone number")
+void shouldSetErrorIfWrongPhone() {
+    $("[data-test-id='city'] input").setValue(validUser.getCity());
+    $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+    $("[data-test-id='date'] input").setValue(firstMeetingDate);
+    $("[data-test-id='name'] input").setValue(validUser.getName());
+    $("[data-test-id='phone'] input").setValue(DataGenerator.generateWrongPhone("en"));
+    $("[data-test-id='agreement']").click();
+    $(byText("Запланировать")).click();
+    $("[data-test-id='phone'] .input__sub")
+            .shouldHave(exactText("Неверный формат номера мобильного телефона"));
+    }
 }
